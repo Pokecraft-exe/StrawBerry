@@ -141,7 +141,7 @@ vector:
   push edx
 
   push stage2.size
-  push (stage2 - decompressor) + 0x70000
+  push 0x70000
 
   call 0x70000
 
@@ -157,10 +157,6 @@ times 510-($-$$) db 0
 dw 0xaa55
 
 ;;; stage 2 ;;;
-
-decompressor:
-;%strcat DECOMPRESSOR_PATH BUILDDIR, '/decompressor-build/decompressor.bin'
-;incbin DECOMPRESSOR_PATH
 
 align 16
 stage2:
