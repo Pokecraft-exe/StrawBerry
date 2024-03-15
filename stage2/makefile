@@ -1,26 +1,15 @@
-SRCDIR := ./
-OBJDIR := ../obj/stage2
+STRAWBERRY = ../obj/stage2/strawberry.bin
 
-STRAWBERRY := $(OBJDIR)/strawberry.bin
-
-LDFLAGS = -nostdlib -static -m elf_x86_64 -z max-page-size=0x1000 -T link.ld
 FLAGS = -Wall -felf32
+LDFLAGS = -nostdlib -static -m elf_x86_64 -z max-page-size=0x1000 -T link.ld
 
-rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d)) 
-
-SRC += $(call rwildcard,$(SRCDIR), *.asm)
-OBJ += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/obj/%.o, $(SRC))
-
-.PHONY: clean
-
-all: $(STRAWBERRY)
+OBJDIR = ../obj/stage2/obj/
+OBJ = $(OBJDIR)entry.o
+OBJS = $(OBJDIR)entry.o
 
 $(STRAWBERRY): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -o $@
+	ld $(LDFLAGS) $(OBJS) -o $(STRAWBERRY)
 
-$(OBJDIR)/obj/%.o: $(SRCDIR)/%.asm
-	nasm $(FLAGS) $< -o $@
+$(OBJ):
+	nasm $(FLAGS) entry.asm -o $(OBJDIR)entry.o
 
-clean:
-	-rm $(STRAWBERRY)
-	-rm $(OBJDIR)/obj/*.o
